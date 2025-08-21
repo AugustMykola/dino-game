@@ -1,0 +1,61 @@
+<div class="p-4">
+  <div class="flex align-items-center justify-content-between mb-3">
+    <h1 class="text-2xl font-bold m-0">Level Library</h1>
+  </div>
+
+  <div class="grid">
+    <div class="col-12 lg:col-5">
+      <div class="grid grid-nogutter gap-3">
+        @for (level of levels; track level.id) {
+          <div class="col-12 md:col-6">
+            <a
+              [routerLink]="['level', level.id]"
+              routerLinkActive="__active"
+              #rla="routerLinkActive"
+              class="block no-underline"
+              [class.pointer-events-none]="!isUnlocked(level.id)"
+              [class.opacity-60]="!isUnlocked(level.id)"
+              (click)="!isUnlocked(level.id) && $event.preventDefault()"
+              [attr.aria-disabled]="!isUnlocked(level.id)"
+            >
+              <div
+                class="p-3 border-1 surface-border border-round transition-duration-200 hover:shadow-2"
+                [ngClass]="{
+                  'border-primary': rla.isActive,
+                  'shadow-3': rla.isActive
+                }"
+              >
+
+                <p class="m-0 text-sm text-600">{{ level.description }}</p>
+
+                <div class="flex align-items-center justify-content-between mt-2">
+                  <small class="text-500">
+                    @if (isUnlocked(level.id)) {
+                      Натисни, щоб стартувати
+                    } @else {
+                      🔒 Заблоковано
+                    }
+                  </small>
+
+                  @if (bestScore(level.id) > 0) {
+                    <small class="text-500">Best: {{ bestScore(level.id) }}</small>
+                  }
+                </div>
+              </div>
+            </a>
+          </div>
+        } @empty {
+          <div class="col-12">
+            <div class="p-3 border-1 surface-border border-round text-600">
+              Немає рівнів
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="col-12 lg:col-7">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
