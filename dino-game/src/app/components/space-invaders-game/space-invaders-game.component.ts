@@ -156,7 +156,7 @@ export class SpaceInvadersGameComponent implements OnInit, OnDestroy {
     this.startOverlayGfx.clear().rect(0, 0, W, H).fill({ color: 0x000000, alpha: 0.55 });
 
     this.startTitle = new Text({
-      text: 'УПРАВЛІННЯ',
+      text: 'Controls',
       style: { fill: 0xffffff, fontFamily: 'Arial', fontWeight: '900', fontSize: 48 },
     });
     this.startTitle.anchor.set(0.5);

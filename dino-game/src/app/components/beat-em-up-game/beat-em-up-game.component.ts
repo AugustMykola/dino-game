@@ -26,6 +26,14 @@ export class BeatEmUpGameComponent implements OnInit, OnDestroy {
   @ViewChild('gameContainer', { static: true }) gameContainer!: ElementRef;
   app: Application<Renderer> = new Application();
 
+  // ✅ Безпечний доступ до stage (ніколи не null коли використовуємо)
+  private get stage(): Container {
+    if (!this.app.stage) {
+      this.app.stage = new Container();
+    }
+    return this.app.stage as Container;
+  }
+
   readonly EDGE_REACH = 16;
 
   world = new Container();
@@ -108,6 +116,10 @@ export class BeatEmUpGameComponent implements OnInit, OnDestroy {
 
   async ngOnInit(): Promise<void> {
     await this.app.init({ background: '#1f2430', resizeTo: this.gameContainer.nativeElement, antialias: true, resolution: 1, preference: 'webgl' });
+
+    // ✅ Матеріалізуємо stage відразу після init
+    void this.stage;
+
     this.gameContainer.nativeElement.appendChild(this.app.canvas);
     this.viewH = this.app.renderer.height;
 
@@ -122,9 +134,9 @@ export class BeatEmUpGameComponent implements OnInit, OnDestroy {
       const bgTex = await Assets.load<Texture>('assets/beat-em-up-bg.png');
       this.bgLayer = new TilingSprite(bgTex, this.app.renderer.width, this.app.renderer.height);
       this.fitBackgroundToHeight();
-      this.app.stage.addChild(this.bgLayer, this.world);
+      this.stage.addChild(this.bgLayer, this.world);
     } catch {
-      this.app.stage.addChild(this.world);
+      this.stage.addChild(this.world);
     }
 
     this.setupScene();
@@ -200,24 +212,24 @@ export class BeatEmUpGameComponent implements OnInit, OnDestroy {
   private setupScene(): void {
     this.hud = new Text({ text: 'A/D: Move  |  W/S or ↑/↓: Aim  |  Space: Jump  |  J: Attack  |  R: Start / Restart', style: { fill: 0xffffff, fontFamily: 'Arial', fontSize: 16, fontWeight: 'bold' } });
     this.hud.x = 12; this.hud.y = 10;
-    this.app.stage.addChild(this.hud);
+    this.stage.addChild(this.hud);
     this.waveText = new Text({ text: '', style: { fill: 0xffe66d, fontFamily: 'Arial', fontSize: 20, fontWeight: '900' } });
     this.waveText.x = 12; this.waveText.y = 34;
-    this.app.stage.addChild(this.waveText);
+    this.stage.addChild(this.waveText);
   }
 
   private showStartScreen(): void {
     this.waitingStart = true;
     const w = this.app.renderer.width;
-    this.startTitle = new Text({ text: 'PIXEL BRAWL', style: { fill: 0xffe66d, fontFamily: 'Arial', fontSize: 44, fontWeight: '900' } });
+    this.startTitle = new Text({ text: 'PIXEL FIGHT', style: { fill: 0xffe66d, fontFamily: 'Arial', fontSize: 44, fontWeight: '900' } });
     this.startTitle.x = (w - this.startTitle.width) / 2;
     this.startTitle.y = 120;
-    this.app.stage.addChild(this.startTitle);
+    this.stage.addChild(this.startTitle);
     const controls = 'Controls: A/D — Move • W/S — Aim • Space — Jump • J — Attack';
     this.startHelp = new Text({ text: controls + '\nPress R to START', style: { fill: 0xffffff, fontFamily: 'Arial', fontSize: 18, fontWeight: 'bold', align: 'center' } });
     this.startHelp.x = (w - this.startHelp.width) / 2;
     this.startHelp.y = 170;
-    this.app.stage.addChild(this.startHelp);
+    this.stage.addChild(this.startHelp);
   }
 
   private startGame(): void {
@@ -486,7 +498,6 @@ export class BeatEmUpGameComponent implements OnInit, OnDestroy {
     const p = this.player;
     const g = p.slash;
 
-    // базові форми (радіус і кути)
     const base = {
       f1:  { r: 46, a0: -0.8, a1: 0.55, life: 200, oy: 32 },
       f2:  { r: 62, a0: -0.5, a1: 0.95, life: 220, oy: 30 },
@@ -502,8 +513,7 @@ export class BeatEmUpGameComponent implements OnInit, OnDestroy {
     g.clear();
     g.moveTo(0, 0).arc(0, 0, base.r, base.a0, base.a1).lineTo(0, 0).fill({ color: 0xffffff, alpha: 0.95 });
 
-    // головне: X слеша тепер на самому краї моделі
-    const edgeX = (mode === 'up') ? (dir > 0 ? 12 : -12) : (p.w - 2); // up трохи від центру, інші — з краю
+    const edgeX = (mode === 'up') ? (dir > 0 ? 12 : -12) : (p.w - 2);
     g.x = edgeX * dir;
     g.y = base.oy;
     g.scale.set(dir, 1);
@@ -722,11 +732,11 @@ export class BeatEmUpGameComponent implements OnInit, OnDestroy {
     this.gameOverText = new Text({ text: 'GAME OVER', style: { fill: 0xff6b6b, fontFamily: 'Arial', fontSize: 42, fontWeight: '900' } });
     this.gameOverText.x = (this.app.renderer.width - this.gameOverText.width) / 2;
     this.gameOverText.y = 90;
-    this.app.stage.addChild(this.gameOverText);
+    this.stage.addChild(this.gameOverText);
     this.restartText = new Text({ text: 'Press R to restart', style: { fill: 0xffffff, fontFamily: 'Arial', fontSize: 16, fontWeight: 'bold' } });
     this.restartText.x = (this.app.renderer.width - this.restartText.width) / 2;
     this.restartText.y = 140;
-    this.app.stage.addChild(this.restartText);
+    this.stage.addChild(this.restartText);
   }
 
   private resetGame(): void {

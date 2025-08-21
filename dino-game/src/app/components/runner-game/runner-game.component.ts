@@ -865,7 +865,7 @@ export class RunnerGameComponent implements OnInit, OnDestroy {
     this.startOverlayGfx.clear().rect(0, 0, W, H).fill({ color: 0x000000, alpha: 0.55 });
 
     this.startTitle = new Text({
-      text: 'УПРАВЛІННЯ',
+      text: 'Controls',
       style: { fill: 0xffffff, fontFamily: 'Arial', fontWeight: '900', fontSize: 48 },
     });
     this.startTitle.anchor.set(0.5);
@@ -874,9 +874,9 @@ export class RunnerGameComponent implements OnInit, OnDestroy {
 
     this.startControls = new Text({
       text:
-        'Space — стрибок\n' +
-        '↑ (з джетпаком) — летіти вгору\n' +
-        'P — пауза',
+        'Space — jump\n' +
+        '↑ (with jetpack) — fly up\\n' +
+        'P — pause',
       style: { fill: 0xffffff, fontFamily: 'Arial', fontSize: 22, lineHeight: 30 },
     });
     this.startControls.anchor.set(0.5);
@@ -884,7 +884,7 @@ export class RunnerGameComponent implements OnInit, OnDestroy {
     this.startControls.y = H / 2 - 20;
 
     this.startHint = new Text({
-      text: 'Готовий? Натисни R, щоб почати',
+      text: 'Ready? Press R, to start',
       style: { fill: 0xffffff, fontFamily: 'Arial', fontSize: 20 },
     });
     this.startHint.anchor.set(0.5);
