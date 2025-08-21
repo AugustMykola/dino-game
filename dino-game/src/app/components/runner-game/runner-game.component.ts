@@ -875,7 +875,7 @@ export class RunnerGameComponent implements OnInit, OnDestroy {
     this.startControls = new Text({
       text:
         'Space — jump\n' +
-        '↑ (with jetpack) — fly up\\n' +
+        '↑ (with jetpack) — fly up\n' +
         'P — pause',
       style: { fill: 0xffffff, fontFamily: 'Arial', fontSize: 22, lineHeight: 30 },
     });
