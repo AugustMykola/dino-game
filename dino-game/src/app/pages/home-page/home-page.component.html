@@ -44,6 +44,12 @@
   </div>
 
   <div class="mt-4">
-    <router-outlet></router-outlet>
+    <router-outlet #childOutlet="outlet"></router-outlet>
+
+    @if (!childOutlet.isActivated) {
+      <div class="p-5 border-1 surface-border surface-card border-round text-center text-700">
+        <div class="text-xl font-bold mb-2">Choose Level</div>
+        <div class="text-sm">Click on one of the cards on the left to open the level</div>
+      </div>
+    }
   </div>
-</div>
