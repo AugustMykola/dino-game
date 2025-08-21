@@ -1,61 +1,49 @@
 <div class="p-4">
   <div class="flex align-items-center justify-content-between mb-3">
-    <h1 class="text-2xl font-bold m-0">Level Library</h1>
+    <h1 class="text-3xl font-bold m-0">Level Library</h1>
   </div>
 
   <div class="grid">
-    <div class="col-12 lg:col-5">
-      <div class="grid grid-nogutter gap-3">
-        @for (level of levels; track level.id) {
-          <div class="col-12 md:col-6">
-            <a
-              [routerLink]="['level', level.id]"
-              routerLinkActive="__active"
-              #rla="routerLinkActive"
-              class="block no-underline"
-              [class.pointer-events-none]="!isUnlocked(level.id)"
-              [class.opacity-60]="!isUnlocked(level.id)"
-              (click)="!isUnlocked(level.id) && $event.preventDefault()"
-              [attr.aria-disabled]="!isUnlocked(level.id)"
-            >
-              <div
-                class="p-3 border-1 surface-border border-round transition-duration-200 hover:shadow-2"
-                [ngClass]="{
-                  'border-primary': rla.isActive,
-                  'shadow-3': rla.isActive
-                }"
-              >
-
-                <p class="m-0 text-sm text-600">{{ level.description }}</p>
-
-                <div class="flex align-items-center justify-content-between mt-2">
-                  <small class="text-500">
-                    @if (isUnlocked(level.id)) {
-                      Натисни, щоб стартувати
-                    } @else {
-                      🔒 Заблоковано
-                    }
-                  </small>
-
-                  @if (bestScore(level.id) > 0) {
-                    <small class="text-500">Best: {{ bestScore(level.id) }}</small>
-                  }
-                </div>
-              </div>
-            </a>
+    @for (level of levels; track level.id) {
+      <div class="col-12 h-max-[210px] sm:col-6 lg:col-4">
+        <a
+          [routerLink]="['level', level.id]"
+          routerLinkActive="__active"
+          #rla="routerLinkActive"
+          class="block no-underline h-full"
+        >
+          <div
+            class="
+              card
+              p-5
+              h-max-[200px]
+              border-1 border-round
+              shadow-2 hover:shadow-4
+              transition-duration-200
+              flex flex-column justify-content-center
+            "
+            [ngClass]="{
+              'border-primary': rla.isActive,
+              'shadow-5': rla.isActive,
+              'card--active': rla.isActive
+            }"
+          >
+            <p class="m-0 text-sm text-300 mb-2 uppercase">{{ level.type }}</p>
+            <h3 class="m-0 text-2xl font-bold text-0 mb-3">{{ level.title }}</h3>
+            <p class="m-0 text-base text-100 line-height-3">{{ level.description }}</p>
           </div>
-        } @empty {
-          <div class="col-12">
-            <div class="p-3 border-1 surface-border border-round text-600">
-              Немає рівнів
-            </div>
-          </div>
-        }
+        </a>
       </div>
-    </div>
+    } @empty {
+      <div class="col-12">
+        <div class="p-3 border-1 surface-border border-round text-600">
+          Немає рівнів
+        </div>
+      </div>
+    }
+  </div>
 
-    <div class="col-12 lg:col-7">
-      <router-outlet></router-outlet>
-    </div>
+  <div class="mt-4">
+    <router-outlet></router-outlet>
   </div>
 </div>

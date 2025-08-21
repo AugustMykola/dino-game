@@ -5,4 +5,4 @@ export interface ILevelConfig {
   type: LevelType;
 }
 
-export type LevelType = 'runner' | 'beet-m-up' | 'space-invaders';
+export type LevelType = 'runner' | 'beat-em-up' | 'space-invaders';

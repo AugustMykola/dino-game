@@ -15,19 +15,8 @@ import {NgClass} from '@angular/common';
   styleUrl: './home-page.component.scss'
 })
 export class HomePageComponent {
-  private router = inject(Router);
-  private route = inject(ActivatedRoute);
-  // private levelsSvc = inject(LevelsService);
 
   levels = LEVELS;
 
-  openLevel(id: string) {
-    this.router.navigate(['level', id], { relativeTo: this.route });
-  }
-
-  isLevelOpen = computed(() => !!this.route.children.find(c => c.outlet === 'right'));
-
-  isUnlocked = (id: string) => true;
-  bestScore  = (id: string) => 1000;
 
 }

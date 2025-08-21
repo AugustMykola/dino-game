@@ -253,7 +253,7 @@ export class RunnerGameComponent implements OnInit, OnDestroy {
     this.showStart();                      // потім показуємо
   }
 
-  // ---------- Helpers for spawn horizon ----------
+  // ---------- Helpers ----------
   private rightWorldEdge(): number {
     return -this.world.x + this.app.renderer.width;
   }
@@ -268,6 +268,11 @@ export class RunnerGameComponent implements OnInit, OnDestroy {
     const jitter = this.OBSTACLE_JITTER + speed * 20;
     const base = Math.max(this.farthestObstacleX(), this.rightWorldEdge(), afterX ?? 0);
     return base + minGap + Math.random() * jitter;
+  }
+
+  /** Лівий край спрайта, коректний і для віддзеркалених по X */
+  private leftXOf(s: Sprite): number {
+    return s.scale.x >= 0 ? s.x : s.x - s.width;
   }
 
   // ---------- Spawners ----------
@@ -299,9 +304,9 @@ export class RunnerGameComponent implements OnInit, OnDestroy {
     const sx = Math.abs(spr.scale.x);
     spr.scale.x = needFlip ? -sx : sx;
 
-    // зафіксувати лівий край у leftX
+    // зафіксувати лівий край у leftX (anchor 0,0, width завжди додатна)
     spr.x = leftX;
-    if (needFlip) spr.x += spr.width; // компенсуємо від’ємний scale.x (anchor 0,0)
+    if (needFlip) spr.x += spr.width; // компенсуємо від’ємний scale.x
   }
 
   private obstacleY(type: ObstacleType, spr: Sprite): number {
@@ -462,8 +467,8 @@ export class RunnerGameComponent implements OnInit, OnDestroy {
         obstacle.sprite.y = (obstacle.baseY ?? obstacle.sprite.y) + Math.sin(t * 2) * 8;
       }
 
-      const worldX = obstacle.sprite.x + this.world.x;
-      if (worldX + obstacle.sprite.width < 0) {
+      const worldLeft = this.leftXOf(obstacle.sprite) + this.world.x;
+      if (worldLeft + obstacle.sprite.width < 0) {
         const newType: ObstacleType = Math.random() < 0.5 ? 'ground' : 'flying';
         obstacle.type = newType;
 
@@ -639,7 +644,7 @@ export class RunnerGameComponent implements OnInit, OnDestroy {
     for (const o of this.obstaclesList) {
       const ow = o.sprite.width;
       const oh = o.sprite.height;
-      const ox = o.sprite.x;
+      const ox = this.leftXOf(o.sprite);   // виправлено для віддзеркалених спрайтів
       const oy = o.sprite.y;
 
       if (this.rectsOverlap(dx, dy, dW, dH, ox, oy, ow, oh)) {

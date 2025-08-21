@@ -1,0 +1,47 @@
+/* 7 колонок на lg+ */
+::ng-deep .custom-col {
+  flex: 0 0 calc(100% / 7);
+  max-width: calc(100% / 7);
+}
+
+/* Базова картка з легким градієнтом і м’яким hover-ефектом */
+::ng-deep .card {
+  background: linear-gradient(180deg, var(--surface-0) 0%, var(--surface-50) 100%);
+  transform: translateZ(0); /* для чіткішого hover */
+}
+
+::ng-deep .card:hover {
+  border-color: var(--primary-color);
+}
+
+/* Активна картка (маршрут активний) — підсвічуємо сильніше */
+::ng-deep .card--active {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--primary-100) 35%, white), var(--surface-0));
+}
+
+/* Темна тема (опціонально, якщо в тебе є). Трохи посилюємо контраст. */
+@media (prefers-color-scheme: dark) {
+  ::ng-deep .card {
+    background: linear-gradient(180deg, var(--surface-800), var(--surface-900));
+  }
+  ::ng-deep .card--active {
+    background: linear-gradient(180deg, color-mix(in srgb, var(--primary-400) 20%, var(--surface-900)), var(--surface-900));
+  }
+}
+
+::ng-deep .card {
+  background: linear-gradient(135deg, var(--primary-600), var(--primary-400));
+  color: black;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+::ng-deep .card:hover {
+  transform: translateY(-6px);
+  background: linear-gradient(135deg, var(--primary-700), var(--primary-500));
+}
+
+/* Активна картка */
+::ng-deep .card--active {
+  border: 2px solid var(--primary-color);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--primary-color) 50%, transparent);
+}
